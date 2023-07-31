@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'room_api',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'room_finder_backend.wsgi.application'
+
+# settings.py
+REST_FRAMEWORK = {
+    'FILTERS_DISABLE_HELP_TEXT': True
+}
 
 
 # Database
