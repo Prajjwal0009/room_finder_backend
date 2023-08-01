@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from .models import Room
-from .serializers import RoomSerializer
+from .models import Room, ContactUs
+from .serializers import RoomSerializer, ContactUsSerializer
 from .filters import RoomFilter
 
 
@@ -29,3 +29,6 @@ class RoomViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class ContactUsViewSet(viewsets.ModelViewSet):
+    queryset = ContactUs.objects.all()
+    serializer_class = ContactUsSerializer
