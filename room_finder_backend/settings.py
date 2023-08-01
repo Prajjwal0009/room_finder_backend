@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'room_api',
     'django_filters',
-    'cors-headers',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [

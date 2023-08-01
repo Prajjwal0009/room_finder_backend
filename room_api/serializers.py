@@ -5,9 +5,14 @@ from .models import Room, ContactUs
 
 
 class RoomSerializer(serializers.ModelSerializer):
+    map_location = serializers.SerializerMethodField()
+
     class Meta:
         model = Room
-        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'latitude', 'longitude')
+        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location')
+
+    def get_map_location(self, instance):
+        return {'latitude': instance.latitude, 'longitude': instance.longitude}
 
 
 class ContactUsSerializer(serializers.ModelSerializer):
