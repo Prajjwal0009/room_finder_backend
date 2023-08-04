@@ -9,7 +9,8 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location', 'latitude', 'longitude')
+        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location', 'latitude',
+                  'longitude', 'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water')
 
     def get_map_location(self, instance):
         return {'latitude': instance.latitude, 'longitude': instance.longitude}

@@ -18,11 +18,15 @@ class Room(models.Model):
     image = models.ImageField(upload_to='uploads/', blank=True, default='default_image.jpg')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    is_water_supply = models.BooleanField(null=True, blank=True, default=True)
+    is_electriciy_charge = models.BooleanField(null=True, blank=True, default=True)
+    is_drainage_available = models.BooleanField(null=True, blank=True, default=True)
+    is_drinking_water = models.BooleanField(null=True, blank=True, default=True)
 
 
 class ContactUs(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField()
-    phone = models.IntegerField(max_length=10)
+    phone = models.IntegerField()
     message = models.TextField()
