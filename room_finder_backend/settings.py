@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'room_api',
     'django_filters',
     'corsheaders'
@@ -76,7 +77,12 @@ WSGI_APPLICATION = 'room_finder_backend.wsgi.application'
 
 # settings.py
 REST_FRAMEWORK = {
-    'FILTERS_DISABLE_HELP_TEXT': True
+    'FILTERS_DISABLE_HELP_TEXT': True,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            # 'rest_framework.authentication.SessionAuthentication',
+            # 'rest_framework.authentication.BasicAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
+        ],
 }
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -93,6 +99,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation

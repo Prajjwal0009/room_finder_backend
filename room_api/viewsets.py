@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Room, ContactUs
 from .serializers import RoomSerializer, ContactUsSerializer
 from .filters import RoomFilter
@@ -10,8 +12,14 @@ from .filters import RoomFilter
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RoomFilter
+
+    def get_permissions(self):
+        if self.action == "list" or self.action == "retrieve":
+            return []
+        return super().get_permissions()
 
     def get_queryset(self):
         queryset = super().get_queryset()
