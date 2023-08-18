@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Room, ContactUs
-from .serializers import RoomSerializer, ContactUsSerializer
+from .serializers import RoomSerializer, ContactUsSerializer, RoomListSerializer
 from .filters import RoomFilter
 
 
@@ -20,6 +20,10 @@ class RoomViewSet(viewsets.ModelViewSet):
         if self.action == "list" or self.action == "retrieve":
             return []
         return super().get_permissions()
+    def get_serializer_class(self):
+        if self.action == "list" or self.action == "retrieve":
+            return RoomListSerializer
+        return RoomSerializer
 
     def get_queryset(self):
         queryset = super().get_queryset()

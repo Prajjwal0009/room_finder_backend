@@ -1,5 +1,7 @@
 import uuid
 
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from model_utils import Choices
 
@@ -7,6 +9,10 @@ from model_utils.fields import StatusField
 
 
 # Create your models here.
+
+
+
+
 class Room(models.Model):
     status_choices = Choices('flat', '1Room', '2Room')
 
@@ -22,6 +28,9 @@ class Room(models.Model):
     is_electriciy_charge = models.BooleanField(null=True, blank=True, default=True)
     is_drainage_available = models.BooleanField(null=True, blank=True, default=True)
     is_drinking_water = models.BooleanField(null=True, blank=True, default=True)
+
+    def get_content_type_id(self):
+        return ContentType.objects.get_for_model(type(self)).id
 
 
 class ContactUs(models.Model):

@@ -8,12 +8,21 @@ User = get_user_model()
 
 
 class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'longitude', 'latitude',
+                  'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water',
+                  )
+
+
+class RoomListSerializer(serializers.ModelSerializer):
     map_location = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location', 'latitude',
-                  'longitude', 'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water')
+        fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location',
+                  'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water',
+                  'get_content_type_id')
 
     def get_map_location(self, instance):
         return {'latitude': instance.latitude, 'longitude': instance.longitude}
