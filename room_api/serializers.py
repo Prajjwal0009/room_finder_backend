@@ -2,7 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Room, ContactUs
+from .models import Room, ContactUs, Booking
 
 User = get_user_model()
 
@@ -61,3 +61,21 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ('id', 'room','name', 'email', 'phone', 'desc')
+
+
+class UserStaffUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    class Meta:
+        fields = ('email',)
+
+
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'

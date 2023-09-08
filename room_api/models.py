@@ -11,8 +11,6 @@ from model_utils.fields import StatusField
 # Create your models here.
 
 
-
-
 class Room(models.Model):
     status_choices = Choices('flat', '1Room', '2Room')
 
@@ -39,3 +37,12 @@ class ContactUs(models.Model):
     email = models.EmailField()
     phone = models.IntegerField()
     message = models.TextField()
+
+
+class Booking(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="room_booking")
+    name = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField()
+    phone = models.IntegerField()
+    desc = models.TextField(blank=True, null=True)
