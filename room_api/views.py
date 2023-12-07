@@ -1,6 +1,6 @@
 # appname/views.py
 from rest_framework import generics, status
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -28,10 +28,10 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
 
     if user:
-        token, created = Token.objects.get_or_create(user=user)
+        # token, created = Token.objects.get_or_create(user=user)
         login(request, user)
         serializer = UserSerializer(user)
-        return Response({'token': token.key, 'user': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'user': serializer.data}, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 

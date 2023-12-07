@@ -2,7 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Room, ContactUs, Booking
+from .models import BookedRoom, Room, ContactUs,AssignedBookedRoom
 
 User = get_user_model()
 
@@ -12,20 +12,57 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'longitude', 'latitude',
                   'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water',
-                  )
+                  'booked_by')
+class BookingSerializer(serializers.ModelSerializer):
+    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())
 
+    class Meta:
+        model = BookedRoom
+        fields = ('id', 'room', 'name', 'email', 'phone', 'desc','booking_date')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['room'] = instance.room_id  # Display only the room ID
+        return representation
+
+class AssignedBookedRoomSerializer(serializers.ModelSerializer):
+    room_id = serializers.UUIDField(write_only=True)
+    booking_id = serializers.UUIDField(write_only=True)
+
+    class Meta:
+        model = AssignedBookedRoom
+        fields = ('id', 'room_id', 'booking_id', 'assign_date')
 
 class RoomListSerializer(serializers.ModelSerializer):
     map_location = serializers.SerializerMethodField()
+    bookings = BookingSerializer(many=True, read_only=True)
+    assigned_room_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
         fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'map_location',
                   'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water',
-                  'get_content_type_id')
+                  'get_content_type_id', 'is_booked', 'bookings', 'is_assigned', 'assigned_room_data','booked_by')
 
     def get_map_location(self, instance):
         return {'latitude': instance.latitude, 'longitude': instance.longitude}
+
+    def get_bookings(self, instance):
+        if instance.is_booked:
+            bookings = BookedRoom.objects.filter(room=instance)
+            serializer = BookingSerializer(bookings, many=True)
+            return serializer.data
+        return None
+
+    def get_assigned_room_data(self, instance):
+        if instance.is_assigned:
+            assigned_books = AssignedBookedRoom.objects.filter(room=instance)
+            if assigned_books.exists():
+                # Assuming you want details of the first assigned booked room
+                assigned_room = assigned_books.first()
+                serializer = AssignedBookedRoomSerializer(assigned_room)
+                return serializer.data
+        return None
 
 
 class ContactUsSerializer(serializers.ModelSerializer):
@@ -63,10 +100,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class BookingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Booking
-        fields = ('id', 'room','name', 'email', 'phone', 'desc')
 
 
 class UserStaffUpdateSerializer(serializers.Serializer):

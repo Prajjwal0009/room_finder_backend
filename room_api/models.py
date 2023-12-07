@@ -15,7 +15,7 @@ class Room(models.Model):
     status_choices = Choices('flat', '1Room', '2Room')
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    room_type = StatusField(choices_name="status_choices")
+    room_type = StatusField(choices_name="status_choices", default='flat')
     description = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=20, decimal_places=2)
@@ -26,6 +26,9 @@ class Room(models.Model):
     is_electriciy_charge = models.BooleanField(null=True, blank=True, default=True)
     is_drainage_available = models.BooleanField(null=True, blank=True, default=True)
     is_drinking_water = models.BooleanField(null=True, blank=True, default=True)
+    is_booked = models.BooleanField(default=False)
+    is_assigned =models.BooleanField(default=False)
+    booked_by =models.CharField(max_length=255)
 
     def get_content_type_id(self):
         return ContentType.objects.get_for_model(type(self)).id
@@ -39,10 +42,18 @@ class ContactUs(models.Model):
     message = models.TextField()
 
 
-class Booking(models.Model):
+class BookedRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="room_booking")
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="bookings")
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField()
     phone = models.IntegerField()
     desc = models.TextField(blank=True, null=True)
+    booking_date = models.DateTimeField(auto_now_add=True)
+
+
+class AssignedBookedRoom(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="assigned_bookings")
+    booked_room = models.ForeignKey(BookedRoom, on_delete=models.CASCADE, related_name="booked_assignment")
+    assign_date = models.DateTimeField(auto_now_add=True)
