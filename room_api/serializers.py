@@ -13,6 +13,16 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = ('id', 'room_type', 'description', 'location', 'price', 'image', 'longitude', 'latitude',
                   'is_water_supply', 'is_electriciy_charge', 'is_drainage_available', 'is_drinking_water',
                   'booked_by')
+        
+    def create(self, validated_data):
+        # Extract the 'image' data from the validated data
+        image_data = validated_data.pop('image', None)
+        instance = super(RoomSerializer, self).create(validated_data)  # Call the super create method
+        if image_data:
+            instance.image = image_data  # Assign the image to the 'image' field of the instance
+            instance.save()
+        return instance
+    
 class BookingSerializer(serializers.ModelSerializer):
     room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())
 
@@ -64,7 +74,14 @@ class RoomListSerializer(serializers.ModelSerializer):
                 return serializer.data
         return None
 
-
+    def create(self, validated_data):
+        image_data = validated_data.pop('image_data', None)
+        instance = super(RoomListSerializer, self).create(validated_data)  # Update the super call
+        if image_data:
+            instance.image_data = image_data
+            instance.save()
+        return instance
+    
 class ContactUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactUs

@@ -19,7 +19,7 @@ class Room(models.Model):
     description = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=20, decimal_places=2)
-    image = models.ImageField(upload_to='uploads/', blank=True, default='default_image.jpg')
+    image = models.ImageField(upload_to='room_images/', null=True, blank=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     is_water_supply = models.BooleanField(null=True, blank=True, default=True)
@@ -27,8 +27,8 @@ class Room(models.Model):
     is_drainage_available = models.BooleanField(null=True, blank=True, default=True)
     is_drinking_water = models.BooleanField(null=True, blank=True, default=True)
     is_booked = models.BooleanField(default=False)
-    is_assigned =models.BooleanField(default=False)
-    booked_by =models.CharField(max_length=255)
+    is_assigned = models.BooleanField(default=False)
+    booked_by = models.CharField(max_length=255)
 
     def get_content_type_id(self):
         return ContentType.objects.get_for_model(type(self)).id
